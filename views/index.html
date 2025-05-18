@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dad Jokes</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: purple;
+    }
+
+    .jumbotron {
+      background-color: gold;
+    }
+  </style>
+</head>
+<body onload="getRandomJoke()"> <!-- Call the function on page load -->
+  <header>
+    <nav>
+        <a href="/features/signup/signup.html">Signup</a>
+        <a href="/features/login/login.html">Login</a>
+        <button id="logoutButton" style="display: none;">Logout</button>
+    </nav>
+  </header>
+  <div class="jumbotron text-center">
+    <h1 class="display-4">Dad Jokes</h1>
+    <p class="lead">Get ready to laugh!</p>
+    <hr class="my-4">
+    <h3 id="joke-question"></h3>
+    <p id="joke-answer"></p>
+    <button class="btn btn-primary" onclick="getRandomJoke()">Get Another Joke</button>
+    <a href="/features/addjoke/addjoke.html" class="btn btn-success">Add a Joke</a>
+    <a href="/features/jokelist/jokelist.html" class="btn btn-info">List all Jokes</a>
+  </div>
+
+  <script>
+  // Function to get a random joke
+  function getRandomJoke() {
+      fetch('/japi/randomjokes')
+        .then(response => response.json())
+        .then(data => {
+          const jokeQuestion = document.getElementById('joke-question');
+          const jokeAnswer = document.getElementById('joke-answer');
+          jokeQuestion.textContent = data[0].question;
+          jokeAnswer.textContent = data[0].answer;
+        })
+        .catch(error => console.log(error));
+    }
+  </script>
+
+<center id="logout-container" style="display: none;">
+  <br>
+  <br>
+  <button id="simple-logout-btn" class="btn btn-danger">Logout</button>
+  <br>
+  <br>
+</center>
+
+<!-- logout button JavaScript -->
+<script>
+  // Check if user is logged in when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/check-auth')
+      .then(response => response.json())
+      .then(data => {
+        const logoutContainer = document.getElementById('logout-container');
+        if (data.loggedIn) {
+          // Show logout button if logged in
+          logoutContainer.style.display = 'block';
+        } else {
+          // Hide logout button if not logged in
+          logoutContainer.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error checking auth status:', error);
+      });
+  });
+
+  // Logout button click handler
+  document.getElementById('simple-logout-btn').addEventListener('click', async function() {
+    console.log('Logout button clicked');
+    try {
+      const response = await fetch('/japi/logout', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+      });
+      
+      if (response.ok) {
+        alert('Logged out successfully');
+        window.location.href = '/';
+      } else {
+        alert('Logout failed');
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  });
+</script>
+
+  <footer>
+    <Center>
+    <p><font color="white">&copy; S. Buchanan</font></p>
+    </Center>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Joke List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+        <a href="/features/signup/signup.html">Signup</a>
+        <a href="/features/login/login.html">Login</a>
+
+    </nav>
+  </header>
+  <div class="container">
+    <h1>Joke List</h1>
+    <ul id="joke-list" class="list-group"></ul>
+  </div>
+
+  <br>
+  <br>
+  <div class="container">
+    <center>
+      <button id="simple-logout-btn" class="btn btn-danger">Logout</button>
+      <br>
+      <br>
+      <a href="/" class="btn btn-primary">Home</a></center>
+  </div>
+
+  <script src="jokelist.js"></script>
+
+<script src="/features/logout/logout.js"></script>
+<script>
+  document.getElementById('simple-logout-btn').addEventListener('click', async function() {
+    console.log('Logout button clicked');
+    try {
+      const response = await fetch('/japi/logout', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+      });
+      
+      if (response.ok) {
+        alert('Logged out successfully');
+        window.location.href = '/';
+      } else {
+        alert('Logout failed');
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  });
+</script>
+
+  <br>
+  <br>
+<footer>
+  <Center>
+  <p>&copy; S. Buchanan</p>
+  </Center>
+</footer>
+
+</body>
+</html>
